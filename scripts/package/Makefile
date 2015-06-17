@@ -110,6 +110,15 @@ tar%pkg: FORCE
 
 clean-dirs += $(objtree)/tar-install/
 
+# perf-dsc - generate a debian perf source pacakge
+# ---------------------------------------------------------------------------
+quiet_cmd_buildperfdsc = BUILDPERFDSC
+      cmd_buildperfdsc = $(CONFIG_SHELL) $(srctree)/scripts/package/buildperfdsc $@
+
+perf-deb-src-pkg: FORCE
+	$(CONFIG_SHELL) $(srctree)/scripts/mkversion > $(objtree)/.version
+	$(MAKE) KBUILD_SRC= perf-tarxz-src-pkg
+	+$(call cmd,buildperfdsc)
 
 # perf-pkg - generate a source tarball with perf source
 # ---------------------------------------------------------------------------
@@ -153,3 +162,4 @@ help: FORCE
 	@echo '  perf-targz-src-pkg  - Build $(perf-tar).tar.gz source tarball'
 	@echo '  perf-tarbz2-src-pkg - Build $(perf-tar).tar.bz2 source tarball'
 	@echo '  perf-tarxz-src-pkg  - Build $(perf-tar).tar.xz source tarball'
+	@echo '  perf-deb-src-pkg    - Build $(perf-tar).dsc debian source package'
